@@ -67,6 +67,7 @@
 #include <ctype.h>
 #include <iostream>
 #include <sstream>          // for ostringstream
+#include <stdexcept>
 
 #ifndef PATH_MAX
 #ifdef MAXPATHLEN
@@ -1846,10 +1847,14 @@ static const char* MaybeEatNewline(const char* start, const char* end,
 // When the parse fails, we take several actions.  msg is a stream
 #define FAIL(msg)   do {                                                \
     LOG_TEMPLATE_NAME(ERROR, my_template);                              \
-    LOG(ERROR) << msg << endl;                                          \
     my_template->set_state(TS_ERROR);                                   \
     /* make extra-sure we never try to parse anything more */           \
     my_template->parse_state_.bufstart = my_template->parse_state_.bufend; \
+    my_template->parse_state_.bufstart = my_template->parse_state_.bufend; \
+    std::stringstream err_msg;                                          \
+    err_msg << "Template Name: " << my_template->template_file() << endl; \
+    err_msg << msg << endl;                                             \
+    throw std::runtime_error(msg.str());                             \
     return TemplateToken(TOKENTYPE_NULL, "", 0, NULL);                  \
   } while (0)
 
