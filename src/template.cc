@@ -1854,7 +1854,7 @@ static const char* MaybeEatNewline(const char* start, const char* end,
     std::stringstream err_msg;                                          \
     err_msg << "Template Name: " << my_template->template_file() << endl; \
     err_msg << msg << endl;                                             \
-    throw std::runtime_error(msg.str());                             \
+    throw std::runtime_error(err_msg.str());                             \
     return TemplateToken(TOKENTYPE_NULL, "", 0, NULL);                  \
   } while (0)
 
